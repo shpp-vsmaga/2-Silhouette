@@ -28,53 +28,62 @@ using namespace std;
 /* Function prototypes*/
 VectorSHPP<VectorSHPP<Point>> findObjects(GBufferedImage* image);
 VectorSHPP<Point> findObject (GBufferedImage* image, Point &point);
+void findPeopleInPicture(string filename);
 
 
 /* Main function*/
 int main() {
-    while (true){
-        string fileName = getLine("Please enter filename with extension \"*.jpg\", \"*.gif\" or \"*.bmp\": ");
-        if (fileExists(fileName) && (getExtension(fileName) == ".jpg" || getExtension(fileName) == ".gif" || getExtension(fileName) == ".bmp")){
-            cout << "Please wait!!!" << endl;
-            VectorSHPP<VectorSHPP<Point>> objects;
-            GWindow window;
-            GBufferedImage* image = new GBufferedImage();
-            image->load(fileName);
-            GBufferedImage* screenImage = new GBufferedImage();
-            screenImage->load(fileName);
-            window.setCanvasSize(image->getWidth(),image->getHeight());
-            window.add(screenImage);
+    Vector<string> pictures;
+    pictures.add("6.jpg");
+    pictures.add("8.jpg");
+    pictures.add("9.jpg");
+    pictures.add("11.jpg");
+    pictures.add("bz.jpg");
+    pictures.add("sil3.jpg");
+    pictures.add("1-1.jpg");
+    pictures.add("5.jpg");
 
-            objects = findObjects(image);
-
-            //------valekseev-centermass.cpp-------------------------------
-            GBufferedImage* imageInLine;
-            imageInLine = drawObjectInLiline(objects, image->getWidth(), image->getHeight());
-            delete image;
-            GBufferedImage *newImage = new GBufferedImage(imageInLine->getWidth(), HEIGHT_IMAGE_GRAPH, 0xffffff);
-            int masses = findPeople(imageInLine, newImage);
-            delete imageInLine;
-            delete newImage;
-
-            //-------vsmaga-heads.cpp---------------------------------------
-            int heads = findHeadsInAllObj(objects);
-
-
-            int objects_count = objects.size();
-            int people = (masses + heads) / 2;
-            if ((masses + heads) % 2 >= 0.5) people++;
-
-            cout << "Objects found: " << objects_count << endl;
-            cout << "Heads found: " << heads  << endl;
-            cout << "People found by masses: " << masses  << endl;
-            cout << "People found: " << people  << endl;
-        } else {
-            cout << "Wrong filename!!!" << endl;
-        }
+    for(string picture: pictures){
+        cout << "Press ENTER to open next picture" << endl;
+        cin.get();
+        findPeopleInPicture(picture);
     }
     return 0;
 }
 
+void findPeopleInPicture(string fileName){
+    cout << "Please wait!!!" << endl;
+    VectorSHPP<VectorSHPP<Point>> objects;
+    GWindow window;
+    GBufferedImage* image = new GBufferedImage();
+    image->load(fileName);
+    GBufferedImage* screenImage = new GBufferedImage();
+    screenImage->load(fileName);
+    window.setCanvasSize(image->getWidth(),image->getHeight());
+    window.add(screenImage);
+
+    objects = findObjects(image);
+
+    //------valekseev-centermass.cpp-------------------------------
+    GBufferedImage* imageInLine;
+    imageInLine = drawObjectInLiline(objects, image->getWidth(), image->getHeight());
+    delete image;
+    GBufferedImage *newImage = new GBufferedImage(imageInLine->getWidth(), HEIGHT_IMAGE_GRAPH, 0xffffff);
+    int masses = findPeople(imageInLine, newImage);
+    delete imageInLine;
+    delete newImage;
+
+    //-------vsmaga-heads.cpp---------------------------------------
+    int heads = findHeadsInAllObj(objects);
+    int objects_count = objects.size();
+    int people = (masses + heads) / 2;
+    if ((masses + heads) % 2 >= 0.5) people++;
+
+    cout << "Objects found: " << objects_count << endl;
+    cout << "Heads found: " << heads  << endl;
+    cout << "People found by masses: " << masses  << endl;
+    cout << "People found: " << people  << endl << endl;
+}
 
 
 /**
