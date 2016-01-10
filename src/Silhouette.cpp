@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <cmath>
 #include "console.h"
 #include "gwindow.h" // for GWindow
 #include "simpio.h"  // for getLine
@@ -34,8 +35,8 @@ void findPeopleInPicture(string filename);
 /* Main function*/
 int main() {
     Vector<string> pictures;
-    pictures.add("6.jpg");
-    pictures.add("8.jpg");
+//    pictures.add("6.jpg");
+//    pictures.add("8.jpg");
     pictures.add("9.jpg");
     pictures.add("11.jpg");
     pictures.add("bz.jpg");
@@ -76,8 +77,7 @@ void findPeopleInPicture(string fileName){
     //-------vsmaga-heads.cpp---------------------------------------
     int heads = findHeadsInAllObj(objects);
     int objects_count = objects.size();
-    int people = (masses + heads) / 2;
-    if ((masses + heads) % 2 >= 0.5) people++;
+    int people = round((masses + heads) / 2);
 
     cout << "Objects found: " << objects_count << endl;
     cout << "Heads found: " << heads  << endl;

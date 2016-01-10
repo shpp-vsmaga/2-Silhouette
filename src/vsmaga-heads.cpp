@@ -17,6 +17,9 @@
 #include "vectorshpp.h"
 #include "queueshpp.h"
 
+const double CORRECTION_OF_SHARP_CHANGE = 0.026;
+const double CORRECTION_OF_SMOOTH_CHANGE = 0.022;
+const int DELTA_RANGE = 3;
 
 /* Function prototypes*/
 int findHeadsInAllObj (VectorSHPP<VectorSHPP<Point>> objects);
@@ -180,8 +183,8 @@ int findMinY(int x, VectorSHPP<Point> &object){
 int goThroughTopLine(VectorSHPP<int> &line, int objectHeigth){
     int result = 0;
     int dy = 0; // change of line between three points
-    int coefSide = objectHeigth * 0.026; //coefficient of the sharp change of the line
-    int coefTop = objectHeigth * 0.022; //coefficient of the smooth change of the line
+    int coefSide = objectHeigth * CORRECTION_OF_SHARP_CHANGE; //coefficient of the sharp change of the line
+    int coefTop = objectHeigth * CORRECTION_OF_SMOOTH_CHANGE; //coefficient of the smooth change of the line
     bool sharpRise = false; //Sharp rise trigger
     bool smoothRise = false; //Smooth rise trigger
     bool smoothDescent = false; //Smooth descent trigger
@@ -189,8 +192,8 @@ int goThroughTopLine(VectorSHPP<int> &line, int objectHeigth){
     for(int i = 0; i < line.size(); i++){
 
         /* Begin to read changes from the third point*/
-        if (i >= 3){
-            dy = line.get(i - 3) - line.get(i);
+        if (i >= DELTA_RANGE){
+            dy = line.get(i - DELTA_RANGE) - line.get(i);
         }
 
         /* Turn on trigger if sharp rise found*/
